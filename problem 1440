@@ -1,0 +1,36 @@
+Approach 1 in JAVA
+class Solution {
+    public boolean checkOverlap(int radius, int xCenter, int yCenter, int x1, int y1, int x2, int y2) {
+        for(int x = x1; x <= x2; x++){
+            for(int y = y1; y <= y2; y++){
+                int dis = (x - xCenter) * (x - xCenter) + (y - yCenter) * (y - yCenter);
+                if(dis <= radius * radius){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+
+Approach 2 in JAVA
+class Solution {
+    public boolean checkOverlap(int radius, int xCenter, int yCenter, int x1, int y1, int x2, int y2) {
+        //leftmost
+        if (xCenter < x1 - radius || xCenter > x2 + radius) {
+            return false;
+        }
+        
+        //bottom most
+        if (yCenter < y1 - radius || yCenter > y2 + radius) {
+            return false;
+        }
+
+        double closestX = Math.max(x1, Math.min(x2, xCenter));
+        double closestY = Math.max(y1, Math.min(y2, yCenter));
+
+        double distance = Math.pow(closestX - xCenter, 2) + Math.pow(closestY - yCenter, 2);
+
+        return distance <= radius * radius;
+    }
+}
