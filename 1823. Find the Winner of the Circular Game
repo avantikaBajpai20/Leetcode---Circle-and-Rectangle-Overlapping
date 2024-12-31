@@ -1,0 +1,41 @@
+//brute force
+class Solution1 {
+    public int findTheWinner(int n, int k) {
+        List<Integer> friends = new ArrayList<>();
+        for(int i = 1; i <= n ; i ++){
+            friends.add(i);
+        }
+        int current = 0;
+        while(friends.size() > 1){
+            current = (current + k - 1) % friends.size();
+            friends.remove(current);
+        }
+        return friends.get(0);
+    }
+}
+
+//optimmised 
+class Solution2 {
+    public int findTheWinner(int n, int k) {
+        int current = 1;  // Start with the first friend (index 1)
+
+        for (int removed = 1; removed < n; removed++) {
+            current = (current + k - 1) % (removed + 1) + 1;
+        }
+
+        return current;
+    }
+}
+
+//optimised
+class Solution {
+    public int solve(int n, int k) {
+        if(n == 1) return 0;
+
+        return (solve(n-1, k) + k) % n;
+    }
+    public int findTheWinner(int n, int k) {
+        int ans = solve(n, k) + 1;
+        return ans;
+    }
+}
