@@ -1,0 +1,38 @@
+class Solution {
+    public int[][] imageSmoother(int[][] img) {
+        int m = img.length;
+        int n = img[0].length;
+        int[][] result = new int[m][n];
+        int[] prevRow = new int[n + 2];
+
+        for (int i = 0; i < m; i++) {
+            // Copy the current row to temp
+            int[] temp = Arrays.copyOfRange(img[i], 0, n + 2);
+
+            for (int j = 0; j < n; j++) {
+                int sum = 0;
+                int count = 0;
+
+                // Optimized neighbor access using a 3x3 window
+                for (int di = -1; di <= 1; di++) {
+                    for (int dj = -1; dj <= 1; dj++) {
+                        int ni = i + di;
+                        int nj = j + dj;
+
+                        if (0 <= ni && ni < m && 0 <= nj && nj < n) {
+                            sum += img[ni][nj];
+                            count++;
+                        }
+                    }
+                }
+
+                result[i][j] = sum / count;
+            }
+
+            // Store the current row for the next iteration
+            prevRow = Arrays.copyOfRange(temp, 0, n + 2);
+        }
+
+        return result;
+    }
+}
