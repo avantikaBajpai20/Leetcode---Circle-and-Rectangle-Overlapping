@@ -1,0 +1,47 @@
+class Solution1 {
+    public int incremovableSubarrayCount(int[] nums) {
+        int count = 0;
+        int n = nums.length;
+        for(int i = 0; i < n; i++){
+            for(int j = i; j < n; j++){
+            boolean incr = true;
+            int lst = -1;
+                for(int k = 0; k < n; k++){
+                    if(k >= i && k <= j){
+                        continue;
+                    }
+                    else{
+                        incr &= (lst < nums[k]);
+                        lst = nums[k];
+                    }
+                }
+                count += incr ? 1 : 0;
+            }
+        }
+        return count;
+    }
+}
+
+class Solution {
+    public int incremovableSubarrayCount(int[] nums) {
+        int n=nums.length;
+        int ct=1;
+        if(n==1) return 1;
+        if(n==2) return 3;
+        int l=0,r=n-1;
+        while(l<n-1 && nums[l]<nums[l+1]) l++;
+        while(r>0 && nums[r-1]<nums[r]) r--;;
+        ct+=l+1; ct+=n-r;
+        if(l>=r) return (n*(n+1))/2;
+        l=0;
+        while(l<r && r<n){
+            if(nums[l]<nums[r]){
+                ct+=r==n-1?1:(n-r);
+                if(l<n-1 && nums[l]<nums[l+1]) l++;
+                else break;
+            }else r++;
+        }
+        return ct;
+        
+    }
+}
