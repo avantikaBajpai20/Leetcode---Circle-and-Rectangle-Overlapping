@@ -1,0 +1,135 @@
+Approach 1: 
+TLE
+public class Solution1 {
+    public int shoppingOffers(List<Integer> price, List<List<Integer>> specialOffers, List<Integer> needs) {
+        return findMinimumCost(price, specialOffers, needs);
+    }
+
+    private int findMinimumCost(List<Integer> price, List<List<Integer>> specialOffers, List<Integer> needs) {
+        int minCost = calculateDotProduct(needs, price); // Calculate the cost without offers
+        for (List<Integer> offer : specialOffers) {
+            List<Integer> updatedNeeds = new ArrayList<>(needs);
+            boolean isOfferApplicable = true;
+
+            // Check if the offer can be applied
+            for (int i = 0; i < needs.size(); i++) {
+                int remaining = updatedNeeds.get(i) - offer.get(i);
+                if (remaining < 0) {
+                    isOfferApplicable = false;
+                    break;
+                }
+                updatedNeeds.set(i, remaining);
+            }
+
+            // If applicable, calculate the cost with the offer
+            if (isOfferApplicable) {
+                minCost = Math.min(minCost, offer.get(needs.size()) + findMinimumCost(price, specialOffers, updatedNeeds));
+            }
+        }
+        return minCost;
+    }
+
+    private int calculateDotProduct(List<Integer> a, List<Integer> b) {
+        int total = 0;
+        for (int i = 0; i < a.size(); i++) {
+            total += a.get(i) * b.get(i);
+        }
+        return total;
+    }
+}
+
+Approach 2:
+TLE
+
+class Solution2 {
+    public int shoppingOffers(List<Integer> price, List<List<Integer>> specialOffers, List<Integer> needs) {
+        return findMinimumCost(price, specialOffers, needs);
+    }
+
+    private int findMinimumCost(List<Integer> price, List<List<Integer>> specialOffers, List<Integer> needs) {
+        int minCost = calculateDotProduct(needs, price); // Calculate the cost without offers
+        for (List<Integer> offer : specialOffers) {
+            List<Integer> updatedNeeds = new ArrayList<>(needs);
+            boolean isOfferApplicable = true;
+
+            // Check if the offer can be applied
+            for (int i = 0; i < needs.size(); i++) {
+                int remaining = updatedNeeds.get(i) - offer.get(i);
+                if (remaining < 0) {
+                    isOfferApplicable = false;
+                    break;
+                }
+                updatedNeeds.set(i, remaining);
+            }
+
+            // If applicable, calculate the cost with the offer
+            if (isOfferApplicable) {
+                minCost = Math.min(minCost, offer.get(needs.size()) + findMinimumCost(price, specialOffers, updatedNeeds));
+            }
+        }
+        return minCost;
+    }
+
+    private int calculateDotProduct(List<Integer> a, List<Integer> b) {
+        int total = 0;
+        for (int i = 0; i < a.size(); i++) {
+            total += a.get(i) * b.get(i);
+        }
+        return total;
+    }
+}
+
+Approach 3:
+ACCEPTED
+
+class Solution {
+    public int shoppingOffers(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
+        // Use a map to store previously computed results for specific needs
+        Map<List<Integer>, Integer> memo = new HashMap<>();
+        return dfs(price, special, needs, memo);
+    }
+
+    private int dfs(List<Integer> price, List<List<Integer>> special, List<Integer> needs, Map<List<Integer>, Integer> memo) {
+        // If the current state is already computed, return it
+        if (memo.containsKey(needs)) {
+            return memo.get(needs);
+        }
+
+        // Calculate the cost without using any special offers
+        int minCost = calculateDirectCost(price, needs);
+
+        // Try using each special offer
+        for (List<Integer> offer : special) {
+            List<Integer> updatedNeeds = new ArrayList<>(needs);
+            boolean isValid = true;
+
+            // Check if the special offer can be applied
+            for (int i = 0; i < needs.size(); i++) {
+                int remaining = updatedNeeds.get(i) - offer.get(i);
+                if (remaining < 0) {
+                    isValid = false; // Offer can't be applied
+                    break;
+                }
+                updatedNeeds.set(i, remaining);
+            }
+
+            // If the offer is valid, calculate the cost with the offer
+            if (isValid) {
+                int offerCost = offer.get(offer.size() - 1);
+                minCost = Math.min(minCost, offerCost + dfs(price, special, updatedNeeds, memo));
+            }
+        }
+
+        // Store the result in the memoization map
+        memo.put(needs, minCost);
+        return minCost;
+    }
+
+    private int calculateDirectCost(List<Integer> price, List<Integer> needs) {
+        int totalCost = 0;
+        for (int i = 0; i < needs.size(); i++) {
+            totalCost += price.get(i) * needs.get(i);
+        }
+        return totalCost;
+    }
+}
